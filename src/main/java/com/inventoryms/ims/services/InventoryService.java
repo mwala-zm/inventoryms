@@ -5,7 +5,7 @@ import com.inventoryms.ims.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class InventoryService {
@@ -31,14 +31,23 @@ public class InventoryService {
         }
     }
 
-    public void receiveProduct(Long productId, int quantity) {
+    // update if exists / create if not
+    public void receiveProduct(Long productId, String productName, int quantity) {
         Product product = productRepository.findById(productId).orElse(null);
         if (product != null) {
             int currentQuantity = product.getQuantity();
             int updatedQuantity = currentQuantity + quantity;
             product.setQuantity(updatedQuantity);
-            productRepository.save(product);
+        } else {
+            if (productName == null || productName.isEmpty()) {
+                throw new IllegalArgumentException("Product name is required for new product");
+            }
+            product = new Product();
+            product.setId(productId);
+            product.setName(productName);
+            product.setQuantity(quantity);
         }
+        productRepository.save(product);
     }
 
     public List<Product> getAllProducts() {

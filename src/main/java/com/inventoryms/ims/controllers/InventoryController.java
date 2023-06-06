@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import com.inventoryms.ims.services.InventoryService;
 import com.inventoryms.ims.models.Product;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/inventory")
@@ -23,19 +24,28 @@ public class InventoryController {
     }
 
     @PostMapping("/products")
-    public void addProductToInventory(@RequestBody Product product) {
+    public String addProductToInventory(@RequestBody Product product) {
         inventoryService.addProduct(product);
+        return "Product added to inventory successfully";
     }
 
     @PostMapping("/ship")
-    public void shipOrder(@RequestParam("productId") Long productId,
-                          @RequestParam("quantity") int quantity) {
+    public String shipOrder(@RequestParam("productId") Long productId,
+            @RequestParam("quantity") int quantity) {
         inventoryService.shipOrder(productId, quantity);
+        return "Order shipped successfully";
     }
 
     @PostMapping("/receive")
-    public void receiveProduct(@RequestParam("productId") Long productId,
-                               @RequestParam("quantity") int quantity) {
-        inventoryService.receiveProduct(productId, quantity);
+    public String receiveProduct(@RequestParam("productId") Long productId,
+            @RequestParam(value = "productName", required = false) String productName,
+            @RequestParam("quantity") int quantity) {
+        if (productName == null || productName.isEmpty()) {
+            inventoryService.receiveProduct(productId, productName, quantity);
+        } else {
+            inventoryService.receiveProduct(productId, productName, quantity);
+        }
+        return "Product received successfully";
     }
+
 }
