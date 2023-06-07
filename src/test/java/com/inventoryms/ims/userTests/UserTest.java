@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 import com.inventoryms.ims.models.Role;
 import com.inventoryms.ims.models.User;
 import com.inventoryms.ims.repository.UserRepository;
+import com.inventoryms.ims.repository.RoleRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -19,20 +20,26 @@ public class UserTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Test
     public void testRoleAssignment() {
 
-        Role role = new Role(Role.STOCK_CLERK);
+    Role role = new Role(Role.STOCK_CLERK);
+    Role savedRole = roleRepository.save(role);
 
-        User user = new User("John Doe",  role);
-
-        user.setRole(role);
-
-        userRepository.save(user);
+    // Create a user
+    User user = new User("John Doe", role);
+    user.setRole(savedRole);
 
 
-        User savedUser = userRepository.findById(user.getId()).orElse(null);
+    userRepository.save(user);
 
-        assertEquals(Role.STOCK_CLERK, savedUser.getRole().getName());
+    // Retrieve the user from the repository
+    User savedUser = userRepository.findById(user.getId()).orElse(null);
+
+    // Test the role assignment
+    assertEquals(Role.STOCK_CLERK, savedUser.getRole().getName());
     }
 }
