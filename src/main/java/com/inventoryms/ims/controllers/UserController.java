@@ -22,7 +22,6 @@ class UserController {
     this.repository = repository;
   }
 
-
   @GetMapping("/users")
   List<User> all() {
     return repository.findAll();
@@ -34,12 +33,11 @@ class UserController {
     return repository.save(newUser);
   }
 
-
   @GetMapping("/users/{id}")
   User one(@PathVariable Long id) {
 
     return repository.findById(id)
-      .orElseThrow(() -> new RuntimeException("User with ID " + id + " not found"));
+        .orElseThrow(() -> new RuntimeException("User with ID " + id + " not found"));
   }
 
   // update user infor
@@ -47,15 +45,15 @@ class UserController {
   User updateUser(@RequestBody User newUser, @PathVariable Long id) {
 
     return repository.findById(id)
-      .map(user -> {
-        user.setName(newUser.getName());
-        user.setRole(newUser.getRole());
-        return repository.save(user);
-      })
-      .orElseGet(() -> {
-        newUser.setId(id);
-        return repository.save(newUser);
-      });
+        .map(user -> {
+          user.setName(newUser.getName());
+          user.setRole(newUser.getRole());
+          return repository.save(user);
+        })
+        .orElseGet(() -> {
+          newUser.setId(id);
+          return repository.save(newUser);
+        });
   }
 
   // remove user by ID
