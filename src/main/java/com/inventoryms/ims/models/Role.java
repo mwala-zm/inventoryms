@@ -1,6 +1,7 @@
 package com.inventoryms.ims.models;
 
 import jakarta.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "roles")
@@ -11,11 +12,6 @@ public class Role {
 
     @Column(nullable = false, length = 45)
     private String name;
-
-    public static final String STOCK_CLERK = "Stock Clerk";
-    public static final String RECEIVING_CLERK = "Receiving Clerk";
-    public static final String SHIPPING_CLERK = "Shipping Clerk";
-    public static final String ORDER_FULFILLMENT_CLERK = "Order Fulfillment Clerk";
 
     public Role() {
     }
@@ -52,5 +48,20 @@ public class Role {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Role role = (Role) o;
+        return Objects.equals(name, role.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

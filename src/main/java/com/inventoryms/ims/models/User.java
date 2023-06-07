@@ -1,6 +1,6 @@
 package com.inventoryms.ims.models;
 
-import java.util.Objects;
+import java.util.*;
 
 import jakarta.persistence.*;
 import com.inventoryms.ims.models.Role;
@@ -14,15 +14,16 @@ public class User {
 
   private String name;
 
-  @OneToOne
-  private Role role;
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+  private Set<Role> role = new HashSet<>();
 
   public User() {
   }
 
   public User(String name, Role role) {
     this.name = name;
-    this.role = role;
+    this.role.add(role);
   }
 
   public Long getId() {
@@ -33,7 +34,7 @@ public class User {
     return name;
   }
 
-  public Role getRole() {
+  public Set<Role> getRole() {
     return role;
   }
 
@@ -45,8 +46,12 @@ public class User {
     this.name = name;
   }
 
-  public void setRole(Role role) {
-    this.role = role;
+  public void setRole(Set<Role> roles) {
+    this.role = roles;
+  }
+
+  public void addRole(Role role) {
+    this.role.add(role);
   }
 
   @Override

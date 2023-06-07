@@ -6,8 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 import com.inventoryms.ims.models.Role;
 import com.inventoryms.ims.models.User;
@@ -27,36 +26,37 @@ public class UserTest {
     @Test
     public void testRoleAssignment() {
 
-        Role role = new Role(Role.STOCK_CLERK);
+        Role role = new Role("STOCK CLERK");
         Role savedRole = roleRepository.save(role);
 
         // Create a user
-        User user = new User("Basswell", role);
-        user.setRole(savedRole);
+        User user = new User("Basswell", savedRole);
 
         userRepository.save(user);
 
         User savedUser = userRepository.findById(user.getId()).orElse(null);
 
-        // Test the role assignment
-        assertEquals(Role.STOCK_CLERK, savedUser.getRole().getName());
+        assertNotNull(savedUser);
+        assertEquals(1, savedUser.getRole().size());
+        assertTrue(savedUser.getRole().contains(savedRole));
     }
 
     @Test
     public void createUser() {
-        Role role = new Role(Role.RECEIVING_CLERK);
+        Role role = new Role("SHIPPING CLERK");
         User user = new User("Joshua", role);
 
         assertEquals("Joshua", user.getName());
-        assertEquals(role, user.getRole());
+        assertEquals(1, user.getRole().size());
+        assertTrue(user.getRole().contains(role));
     }
 
     @Test
     public void testUserEquality() {
-        Role role1 = new Role(Role.SHIPPING_CLERK);
-        Role role2 = new Role(Role.RECEIVING_CLERK);
-        User user1 = new User("Mwala", role1);
-        User user2 = new User("Ziwelanji", role2);
+        Role shipping = new Role("SHIPPING CLERK");
+        Role receiving = new Role("RECEIVING CLERK");
+        User user1 = new User("Mwala", shipping);
+        User user2 = new User("Ziwelanji", receiving);
 
         assertNotEquals(user1, user2);
     }
