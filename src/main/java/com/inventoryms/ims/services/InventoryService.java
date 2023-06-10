@@ -34,6 +34,8 @@ public class InventoryService {
     // update if exists / create if not
     public void receiveProduct(Long productId, String productName, int quantity) {
         Product product = productRepository.findById(productId).orElse(null);
+        boolean isNewProduct = false;
+
         if (product != null) {
             int currentQuantity = product.getQuantity();
             int updatedQuantity = currentQuantity + quantity;
@@ -46,9 +48,20 @@ public class InventoryService {
             product.setId(productId);
             product.setName(productName);
             product.setQuantity(quantity);
+            isNewProduct = true;
         }
+
         productRepository.save(product);
+
+
+        String notificationMessage = isNewProduct ? "New product received: " + productName : "Product updated: " + productName;
+        sendNotification(notificationMessage);
     }
+
+    private void sendNotification(String message) {
+        System.out.println("Notification sent: " + message);
+    }
+
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();

@@ -18,6 +18,11 @@ public class InventoryController {
         this.inventoryService = inventoryService;
     }
 
+    @GetMapping
+    public List<Product> getAllInventory() {
+        return inventoryService.getAllProducts();
+    }
+
     @GetMapping("/products")
     List<Product> getAllProducts() {
         return inventoryService.getAllProducts();
@@ -40,11 +45,7 @@ public class InventoryController {
     public String receiveProduct(@RequestParam("productId") Long productId,
             @RequestParam(value = "productName", required = false) String productName,
             @RequestParam("quantity") int quantity) {
-        if (productName == null || productName.isEmpty()) {
-            inventoryService.receiveProduct(productId, productName, quantity);
-        } else {
-            inventoryService.receiveProduct(productId, productName, quantity);
-        }
+        inventoryService.receiveProduct(productId, productName, quantity);
         return "Product received successfully";
     }
 
