@@ -11,6 +11,7 @@ public class Product {
     private Long id;
     private String name;
     private int quantity;
+    private String productType;
 
     public Product() {
     }
@@ -44,12 +45,48 @@ public class Product {
         this.quantity = quantity;
     }
 
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Product product = (Product) o;
+
+        if (quantity != product.quantity)
+            return false;
+        if (id != null ? !id.equals(product.id) : product.id != null)
+            return false;
+        if (name != null ? !name.equals(product.name) : product.name != null)
+            return false;
+        return productType != null ? productType.equals(product.productType) : product.productType == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + quantity;
+        result = 31 * result + (productType != null ? productType.hashCode() : 0);
+        return result;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", name='" + name + '\'' +
-                ", quantity='" + quantity + '\'' +
+                ", quantity=" + quantity +
+                ", productType='" + productType + '\'' +
                 '}';
     }
 }

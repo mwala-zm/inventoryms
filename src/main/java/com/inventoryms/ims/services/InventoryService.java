@@ -1,6 +1,8 @@
 package com.inventoryms.ims.services;
 
+import com.inventoryms.ims.models.AccountsPayable;
 import com.inventoryms.ims.models.Product;
+import com.inventoryms.ims.repository.AccountsPayableRepository;
 import com.inventoryms.ims.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +13,9 @@ import java.util.*;
 public class InventoryService {
 
     private final ProductRepository productRepository;
+
+    @Autowired
+    private AccountsPayableRepository accountsPayableRepository;
 
     @Autowired
     public InventoryService(ProductRepository productRepository) {
@@ -53,15 +58,21 @@ public class InventoryService {
 
         productRepository.save(product);
 
-
-        String notificationMessage = isNewProduct ? "New product received: " + productName : "Product updated: " + productName;
+        String notificationMessage = isNewProduct ? "New product received: " + productName
+                : "Product updated: " + productName;
         sendNotification(notificationMessage);
     }
 
-    private void sendNotification(String message) {
-        System.out.println("Notification sent: " + message);
+    public boolean checkStock(Long productId) {
+        Product product = productRepository.findById(productId).orElse(null);
+        return product != null && product.getQuantity() > 0;
     }
 
+    public void sendNotification(String message) {
+        AccountsPayable notification = new AccountsPayable();
+        notification.getMessage(message);
+        accountsPayableRepository.save(notification);
+    }
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();

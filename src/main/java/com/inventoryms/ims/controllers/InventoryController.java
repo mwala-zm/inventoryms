@@ -31,12 +31,21 @@ public class InventoryController {
     @PostMapping("/products")
     public String addProductToInventory(@RequestBody Product product) {
         inventoryService.addProduct(product);
-        return "Product added to inventory successfully";
+        return product.getName() + " added to inventory successfully";
     }
 
     @PostMapping("/ship")
     public String shipOrder(@RequestParam("productId") Long productId,
             @RequestParam("quantity") int quantity) {
+        if (quantity <= 0) {
+            return "Invalid quantity";
+        }
+
+        boolean isInStock = inventoryService.checkStock(productId);
+        if (!isInStock) {
+            return "Product not available in stock";
+        }
+
         inventoryService.shipOrder(productId, quantity);
         return "Order shipped successfully";
     }
@@ -46,7 +55,7 @@ public class InventoryController {
             @RequestParam(value = "productName", required = false) String productName,
             @RequestParam("quantity") int quantity) {
         inventoryService.receiveProduct(productId, productName, quantity);
-        return "Product received successfully";
+        return "Recieved " + productName + " successfully";
     }
 
 }
