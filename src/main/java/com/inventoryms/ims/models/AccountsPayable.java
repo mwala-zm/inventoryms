@@ -14,7 +14,7 @@ public class AccountsPayable {
 
     }
 
-    public AccountsPayable(String message){
+    public AccountsPayable(String message) {
         this.message = message;
     }
 
@@ -32,5 +32,13 @@ public class AccountsPayable {
 
     public Long getId(Long id) {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "AccountsPayable{" +
+                "id=" + id +
+                ", message='" + message + '\'' +
+                '}';
     }
 }
