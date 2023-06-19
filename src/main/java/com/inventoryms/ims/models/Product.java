@@ -4,6 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 
+import com.inventoryms.ims.status.Status;
+
 @Entity
 public class Product {
     @Id
@@ -12,6 +14,7 @@ public class Product {
     private String name;
     private int quantity;
     private String productType;
+    private Status status;
 
     public Product() {
     }
@@ -51,6 +54,14 @@ public class Product {
 
     public void setProductType(String productType) {
         this.productType = productType;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     @Override

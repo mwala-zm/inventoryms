@@ -4,6 +4,8 @@ import com.inventoryms.ims.models.AccountsPayable;
 import com.inventoryms.ims.models.Product;
 import com.inventoryms.ims.repository.AccountsPayableRepository;
 import com.inventoryms.ims.repository.ProductRepository;
+import com.inventoryms.ims.status.Status;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,7 @@ public class InventoryService {
     }
 
     public void addProduct(Product product) {
+        product.setStatus(Status.AVAILABLE);
         productRepository.save(product);
     }
 
@@ -32,12 +35,13 @@ public class InventoryService {
             int currentQuantity = product.getQuantity();
             int updatedQuantity = Math.max(0, currentQuantity - quantity);
             product.setQuantity(updatedQuantity);
+            product.setStatus(updatedQuantity > 0 ? Status.AVAILABLE : Status.CANCELLED);
             productRepository.save(product);
         }
     }
 
     // update if exists / create if not
-    public void receiveProduct(Long productId, String productName, int quantity) {
+    public void receiveProduct(Long productId, String productName, int quantity, String productType) {
         Product product = productRepository.findById(productId).orElse(null);
         boolean isNewProduct = false;
 
@@ -53,6 +57,8 @@ public class InventoryService {
             product.setId(productId);
             product.setName(productName);
             product.setQuantity(quantity);
+            product.setStatus(Status.AVAILABLE);
+            product.setProductType(productType);
             isNewProduct = true;
         }
 

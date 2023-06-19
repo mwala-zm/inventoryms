@@ -53,8 +53,9 @@ public class InventoryController {
     @PostMapping("/receive")
     public String receiveProduct(@RequestParam("productId") Long productId,
             @RequestParam(value = "productName", required = false) String productName,
-            @RequestParam("quantity") int quantity) {
-        inventoryService.receiveProduct(productId, productName, quantity);
+            @RequestParam("quantity") int quantity,
+            @RequestParam("productType") String productType) {
+        inventoryService.receiveProduct(productId, productName, quantity, productType);
         return "Recieved " + productName + " successfully";
     }
 
