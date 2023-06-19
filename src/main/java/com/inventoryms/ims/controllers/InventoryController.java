@@ -46,6 +46,11 @@ public class InventoryController {
             return "Product not available in stock";
         }
 
+        int totalQuantity = inventoryService.totalStock(productId);
+        if (quantity > totalQuantity) {
+            return "What you want to ship is more than available quantity. \nKindly adjust the quantity";
+        }
+
         inventoryService.shipOrder(productId, quantity);
         return "Order shipped successfully";
     }

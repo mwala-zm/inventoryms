@@ -74,6 +74,11 @@ public class InventoryService {
         return product != null && product.getQuantity() > 0;
     }
 
+    public int totalStock(Long productId) {
+        Optional<Product> optionalProduct = productRepository.findById(productId);
+        return optionalProduct.map(Product::getQuantity).orElse(0);
+    }
+
     public void sendNotification(String message) {
         AccountsPayable notification = new AccountsPayable();
         notification.getMessage(message);
