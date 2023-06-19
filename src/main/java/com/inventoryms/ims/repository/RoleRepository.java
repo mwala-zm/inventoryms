@@ -7,5 +7,5 @@ import com.inventoryms.ims.models.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-
+    Role findByName(String name);
 }
